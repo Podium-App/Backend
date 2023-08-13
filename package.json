@@ -1,0 +1,23 @@
+{
+  "name": "podium",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "dev" : "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.4.2",
+    "nodemon": "^3.0.1"
+  }
+}
