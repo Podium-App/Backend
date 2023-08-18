@@ -1,6 +1,7 @@
 "use strict"
 
 const controller = require("../controller/controller"); 
+const examiner = require("../controller/examiner"); 
 const Subjects = require('../database/Subjects'); 
 const Test = require("../database/Test"); 
 
@@ -60,6 +61,12 @@ module.exports = (app) =>{
                 res.status(200).send({"status":200,filteredResponse})
             }
 
+    })
+
+    app.route("/podium/getsession").get(async (req,res)=>{
+        const {subjectname,length} = req.body
+        const reply = await examiner.makeTest(subjectname, length);  
+        res.status(reply.status).send(reply); 
     })
 
 }
