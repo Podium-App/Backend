@@ -40,7 +40,7 @@ module.exports.getTest = async(subjectname)=>{
     const response = await Test.findOne({subjectname});  
     
     if(!response){
-        return {"status":400}; 
+        return {"status":400, "Error": "Could not find test."}; 
     }else{
         return{"status":200, response}; 
     }
