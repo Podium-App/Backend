@@ -23,6 +23,10 @@ module.exports = (app) =>{
 
     app.route('/podium/allsubjects').get(async (req,res) =>{
         //TODO: authorize response
+
+        let token = req.headers['x-access-token'] || req.headers['authorization']
+
+
         const response = await controller.getAllSubjects(); 
         if(response.status == 400){
                 res.status(400).send({response})
@@ -66,7 +70,15 @@ module.exports = (app) =>{
     app.route("/podium/getsession").get(async (req,res)=>{
         const {subjectname,length} = req.body
         const reply = await examiner.makeTest(subjectname, length);  
-        res.status(reply.status).send(reply); 
+        res.send(reply); 
+    })
+
+    app.route("/blvrd/developer/signin").get(async (req,res)=>{
+
     })
 
 }
+
+
+
+ 

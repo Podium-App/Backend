@@ -1,26 +1,69 @@
 'use strict'
 
 const controller = require("../controller/controller"); 
+const cts = require('../constants/constants'); 
+const Test = require("../database/Test"); 
+const responder = require("../controller/responder.js"); 
 
 module.exports.makeTest = async (subjectname, length) =>{
-    const response = await controller.getTest(subjectname); 
-    console.log(response)
-    let exam = []
-    if(response.status == 200){
-        const maxLength = response.response.questions.length;  
+    try{
+        const response = await Test.findOne({subjectname});  
+        let exam = []
+        if(response){
+            const maxLength = response.questions.length;  
 
-        if(maxLength < length ){
-            return {"status":400, "Report": "This test does not have that many questions. Maximum number of questions is "+maxLength, "MaxLength": maxLength}; 
+            if(maxLength < length ){
+                const result = {
+                    "responseFlag":"Failed", 
+                    "responseMessage": "This test does not have that many questions. Maximum number of questions is "+maxLength, 
+                    "resultData":{
+                        "exam":null, 
+                        "sequence":null,
+                        "MaxLength": maxLength
+                    }
+                }
+                return responder.getResponse({"status":400, "message": cts.Messages.msg22 , result}); 
+            }
+            const picked = generate18Numbers(maxLength, length); 
+            picked.forEach(item =>{
+                let {question,options,illustrator} = response.questions[item]; 
+                exam.push({question,options,illustrator})
+            })
+            const result = {
+                    "responseFlag":"Ok", 
+                    "responseMessage": "Operation successful", 
+                    "resultData":{
+                        "exam":exam, 
+                        "sequence": picked,
+                        "MaxLength": maxLength
+                    }
+                }
+            return responder.getResponse({"status":200, "message":cts.Messages.msg2, result}); 
+        }else{
+                const result = {
+                    "responseFlag":"Failed", 
+                    "responseMessage": "unable to retrieve test", 
+                    "resultData":{
+                        "exam":null, 
+                        "sequence":null,
+                        "MaxLength": maxLength
+                    }
+                }
+                return responder.getResponse({"status":400, "message": cts.Messages.msg21 , result}); 
         }
-        const picked = generate18Numbers(maxLength, length); 
-        picked.forEach(item =>{
-            exam.push(response.response.questions[item])
-        })
-
-        return {"status":200, "Sequence": picked , "Exam": exam}; 
-    }else{
-        return response
+    } catch(exp){
+                const result = {
+                    "responseFlag":"Failed", 
+                    "responseMessage":  exp.message, 
+                    "resultData":{
+                        "exam":null, 
+                        "sequence":null,
+                        "MaxLength": null
+                    }
+                }
+                return responder.getResponse({"status":400, "message": cts.Messages.msg21 , result}); 
     }
+    
 }
 
 
