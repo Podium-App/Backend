@@ -36,7 +36,7 @@ module.exports = (app) =>{
     })
 
 
-    app.route('/podium/onesubject').get(async (req,res) =>{
+    app.route('/podium/onesubject').post(async (req,res) =>{
         //TODO: authorize response
         const {subjectname} = req.body;  
         const response = await controller.getTest(subjectname)
@@ -47,7 +47,7 @@ module.exports = (app) =>{
             }
     })
 
-    app.route("/podium/onecategory").get(async (req,res)=>{
+    app.route("/podium/onecategory").post(async (req,res)=>{
         const {scope} = req.body; 
 
         const response = await controller.getAllSubjects(); 
@@ -67,7 +67,7 @@ module.exports = (app) =>{
 
     })
 
-    app.route("/podium/getsession").get(async (req,res)=>{
+    app.route("/podium/getsession").post(async (req,res)=>{
         const {subjectname,length} = req.body
         const reply = await examiner.makeTest(subjectname, length);  
         res.send(reply); 
